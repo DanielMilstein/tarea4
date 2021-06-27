@@ -42,7 +42,7 @@ int main()
 
 	cout << "La distancia total es: " << p.calcular() << endl;
 
-	cout << "La distancia entre 9 y 0 es: " << p.distancia(0,9) << endl;
+	p.distancia(0,9);
 
 
 

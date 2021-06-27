@@ -71,7 +71,7 @@ double pais::distancia_edge(double x1, double y1, double x2, double y2){		// √
 
 }
 
-double pais::distancia(int c1, int c2){
+double pais::distancia(int c1, int c2){ //prims desde c1 hasta que encuentre c2?
 	if (edges.empty()){
 		calcular();
 	}
@@ -81,48 +81,72 @@ double pais::distancia(int c1, int c2){
 
 	pair<int,int> ideal = make_pair(c1,c2);
 	pair<int,int> laedi = make_pair(c2,c1);
-	map<pair<int,int>, double>::iterator i;
-	for (i = vias.begin(); i != vias.end(); i++)
-	{
-		if (i->first == ideal || i->first == laedi){	//Caso base
-			return i->second;
-		}
-	}
+	map<pair<int,int>, double>::iterator itr;
 
-	map<pair<int,int>, double> vias_imag;	
-	//Agregar todos las otras vias posible pero con valores infinitos.
-	for (unsigned int i = 0; i < ciudades.size(); i++)
+	vector<pair<int,int>> incluye_c1;
+	for (itr = vias.begin(); itr != vias.end(); itr++)
 	{
-		for (unsigned int k = 0; k < ciudades.size(); k++)
+		if (itr->first == ideal || itr->first == laedi){	//Caso base
+			return itr->second;
+		}
+
+		if (itr->first.first == c1 || itr->first.second == c1)
 		{
-			if (i==k){
-				continue;
-			}
-			pair<int,int> inf = make_pair(i,k);
-			vias_imag[inf] = 100000;
+			incluye_c1.push_back(itr->first);
+			itr = vias.erase(itr);
 		}
-	}
 
-	for (map<pair<int,int>, double>::iterator it = vias.begin(); it != vias.end(); ++it)
+	}
+	vector<pair<int, int>> camino;
+	vector<pair<int, int>> camino_def;
+	unsigned int menor = 12345678;
+	map<pair<int, int>, double> vias2 = vias;
+	for (unsigned int i = 0; i < incluye_c1.size(); ++i)
 	{
-		vias_imag[it->first] = it->second;
-		pair<int,int> alv = make_pair(it->first.second, it->first.first);
-		vias_imag[alv] = it->second;
-	}
-	//Hasta aqui esto podria ser innecesario.
+		camino.clear();
+		camino.push_back(incluye_c1[i]);
 
-	//Imprime todas las vias 'imaginarias'
-	for (map<pair<int,int>, double> ::iterator i = vias_imag.begin(); i != vias_imag.end(); ++i)
+		for(unsigned int k = 0; k < camino.size(); k++)
+		{
+			vias2 = vias;	
+			for (map<pair<int,int>, double>::iterator iter = vias2.begin(); iter != vias2.end(); iter++)
+			{
+					if (iter->first.first == camino[k].first || iter->first.second == camino[k].first ||
+						iter->first.first == camino[k].second || iter->first.second == camino[k].second)
+					{
+						camino.push_back(iter->first);
+						iter = vias2.erase(iter);
+					}
+
+			}
+
+			if (c2 == camino[k].first || c2 == camino[k].second)
+			{
+				if (camino.size() < menor){
+					menor = camino.size();
+				}
+				break;
+			}
+		}
+		if (camino_def.size() == 0)
+		{
+			camino_def = camino;
+		}
+		// if (camino_def.size() > menor)
+		// {
+
+		// 	camino_def = camino;
+		// }
+	}
+
+	for (vector<pair<int,int>>:: iterator ij = camino_def.begin(); ij != camino_def.end(); ij++)
 	{
-		cout << i->first.first << "<->" << i->first.second << ": " << i->second << endl;
+		cout << ij->first << ", " << ij->second << endl;
 	}
-
-
-
-
-
-
+	
 	return 0;
 
 
 }
+
+
