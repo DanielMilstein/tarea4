@@ -13,7 +13,7 @@ def main():
 
 	j,k = sample(range(nciud), 2)
 
-	print(f"Distancia a recorrer entre ciudades {j} y {k}: {p.distancia(j, k)}")
+	#print(f"Distancia a recorrer entre ciudades {j} y {k}: {p.distancia(j, k)}")
 #Main
 if __name__ == "__main__":
 	main()

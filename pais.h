@@ -24,7 +24,7 @@ public:
 		double calcular(); 		//Longitud total de la via.
 		double distancia_edge(double, double, double, double);		//Entre 2 ciudades.	
 		double distancia(int, int);
-		bool in_vector(vector<int>, int);
+
 };
 
 #endif

@@ -8,8 +8,8 @@ PY=/usr/include/python3.8/
 
 
 _roadBuilder.so: roadBuilder.cxx pais.o city.o
-	g++ -fPIC -c roadBuilder.cxx -o roadBuilder.o -I$(PYmac)
-	g++ -shared roadBuilder.o pais.o city.o -o _libroadBuilder.so
+	g++ -fPIC -c roadBuilder.cxx -o roadBuilder.o -I$(PY)
+	g++ -shared roadBuilder.o pais.o city.o -o _roadBuilder.so
 
 $(EXE): main.o $(DEPS)
 # 	$(CC) -o $(EXE) $(FLAGS) -Wl,-rpath=. main.o -L. -lfiguras
@@ -18,6 +18,7 @@ $(EXE): main.o $(DEPS)
 roadBuilder.cxx: pais.i pais.h city.h
 	swig -python -c++ pais.i
 	mv pais_wrap.cxx roadBuilder.cxx
+
 
 
 
@@ -35,6 +36,9 @@ run: $(EXE)
 clean:
 	rm -f *.o *so
 	rm -f $(EXE)
+	rm -f roadBuilder.*
+	rm -f -r __pycache__
+	rm -f roadBuilder.py
 
 
 
